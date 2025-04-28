@@ -4,4 +4,4 @@
 .idea/
 .venv/
 .ipynb_checkpoints/
-.data/
+data/
