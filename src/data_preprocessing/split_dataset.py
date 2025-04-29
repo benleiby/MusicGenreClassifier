@@ -12,7 +12,7 @@ if not os.path.isdir(os.path.join(root_data_path, "images_original")):
 else:
     print("Data located.")
 
-# Create files.
+# Create directories.
 
 new_dirs = {
     "train": os.path.join(root_data_path, "train"),
@@ -20,11 +20,11 @@ new_dirs = {
     "test": os.path.join(root_data_path, "test")
 }
 
-for new_dir in new_dirs:
-    print("Building " + new_dir + ".")
-    if os.path.exists(new_dir):
-        shutil.rmtree(new_dir)
-    os.makedirs(new_dir, exist_ok=True)
+for new_dir_name, new_dir_path in new_dirs.items():
+    print("Building " + new_dir_name + ".")
+    if os.path.exists(new_dir_path):
+        shutil.rmtree(new_dir_path)
+    os.makedirs(new_dir_path, exist_ok=True)
 
 # Split dataset.
 
@@ -32,7 +32,13 @@ image_data_path = os.path.join(root_data_path, "images_original")
 
 for genre in os.listdir(image_data_path):
 
-    images = os.listdir(os.path.join(image_data_path, genre))
+    for dir_dir_name, new_dir_path in new_dirs.items():
+        os.makedirs(os.path.join(new_dir_path, genre), exist_ok=True)
+
+    images = [img for img in os.listdir(os.path.join(image_data_path, genre))
+        if img.lower().endswith(".png")
+    ]
+
     random.shuffle(images)
     n = len(images)
 
@@ -41,8 +47,11 @@ for genre in os.listdir(image_data_path):
     test_images = images[int(0.9 * n):]
 
     for image in train_images:
-        shutil.copy(os.path.join(image_data_path, genre, image), new_dirs["train"])
+        shutil.copy(os.path.join(image_data_path, genre, image),
+            os.path.join(new_dirs["train"], genre))
     for image in val_images:
-        shutil.copy(os.path.join(image_data_path, genre, image), new_dirs["val"])
+        shutil.copy(os.path.join(image_data_path, genre, image),
+            os.path.join(new_dirs["val"], genre))
     for image in test_images:
-        shutil.copy(os.path.join(image_data_path, genre, image), new_dirs["test"])
+        shutil.copy(os.path.join(image_data_path, genre, image),
+            os.path.join(new_dirs["test"], genre))
