@@ -3,21 +3,29 @@ import sys
 import shutil
 import random
 
-root_data_path = "../../data/"
+GTZAN_data_path = os.path.join("..", "..", "data", "GTZAN")
+root_data_path = os.path.join("..", "..", "data")
 
 # Verify presence of images directory.
 
-if not os.path.isdir(os.path.join(root_data_path, "images_original")):
+image_data_path = os.path.join(GTZAN_data_path, "images_original")
+if not os.path.isdir(os.path.join(GTZAN_data_path, "images_original")):
     print("Failed to locate data.", file=sys.stderr)
 else:
-    print("Data located.")
+    print("Images located.")
 
 # Create directories.
 
+dataset_path = os.path.join(root_data_path, "dataset")
+
+if os.path.exists(dataset_path):
+    shutil.rmtree(dataset_path)
+os.makedirs(dataset_path)
+
 new_dirs = {
-    "train": os.path.join(root_data_path, "train"),
-    "val": os.path.join(root_data_path, "val"),
-    "test": os.path.join(root_data_path, "test")
+    "train": os.path.join(dataset_path, "train"),
+    "val": os.path.join(dataset_path, "val"),
+    "test": os.path.join(dataset_path, "test")
 }
 
 for new_dir_name, new_dir_path in new_dirs.items():
@@ -27,8 +35,6 @@ for new_dir_name, new_dir_path in new_dirs.items():
     os.makedirs(new_dir_path, exist_ok=True)
 
 # Split dataset.
-
-image_data_path = os.path.join(root_data_path, "images_original")
 
 for genre in os.listdir(image_data_path):
 
@@ -55,3 +61,5 @@ for genre in os.listdir(image_data_path):
     for image in test_images:
         shutil.copy(os.path.join(image_data_path, genre, image),
             os.path.join(new_dirs["test"], genre))
+
+print("Successfully split data.")
