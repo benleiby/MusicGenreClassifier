@@ -29,7 +29,6 @@ new_dirs = {
 }
 
 for new_dir_name, new_dir_path in new_dirs.items():
-    print("Building " + new_dir_name + ".")
     if os.path.exists(new_dir_path):
         shutil.rmtree(new_dir_path)
     os.makedirs(new_dir_path, exist_ok=True)
