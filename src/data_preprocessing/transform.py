@@ -91,7 +91,7 @@ def second_transformation(root_dataset_path, root_input_path):
             CropWhiteBorder(threshold=245),
             transforms.Resize((224, 224)),
             transforms.ToTensor(),
-            transforms.Normalize(stats[split][0], stats[split][1])
+            transforms.Normalize(stats["train"][0], stats["train"][1])
         ])
 
         for genre in os.listdir(split_directory):
